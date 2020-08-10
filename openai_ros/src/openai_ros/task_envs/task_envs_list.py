@@ -7,7 +7,7 @@ def RegisterOpenAI_Ros_Env(task_env, max_episode_steps=10000):
     """
     Registers all the ENVS supported in OpenAI ROS. This way we can load them
     with variable limits.
-    Here is where you have to PLACE YOUR NEW TASK ENV, to be registered and accesible.
+    Here is where you have to PLACE YOUR NEW TASK ENV, to be registered and accessible.
     return: False if the Task_Env wasnt registered, True if it was.
     """
 
@@ -193,6 +193,21 @@ def RegisterOpenAI_Ros_Env(task_env, max_episode_steps=10000):
         # import our training environment
         from openai_ros.task_envs.turtlebot3 import turtlebot3_world
 
+        ########################################################### ADDED FOR WALRUS
+
+    elif task_env == 'WalrusTest-v0':
+
+        register(
+            id=task_env,
+            entry_point='openai_ros.task_envs.walrus.walrus_test:WalrusTestEnv',
+            max_episode_steps=max_episode_steps,
+        )
+
+        # import our training environment
+        from openai_ros.task_envs.walrus import walrus_test    
+
+
+        ############################################################ END WALRUS ADDITIONS
     elif task_env == 'WamvNavTwoSetsBuoys-v0':
 
         register(
