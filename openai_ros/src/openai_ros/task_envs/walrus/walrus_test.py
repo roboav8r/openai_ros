@@ -74,8 +74,12 @@ class WalrusTestEnv(walrus_env.WalrusEnv):
         # In the discretization method.
         laser_scan = self.get_laser_scan()
         num_laser_readings = int(len(laser_scan.ranges)/self.new_ranges)
-        high = numpy.full((num_laser_readings), self.max_laser_value)
-        low = numpy.full((num_laser_readings), self.min_laser_value)
+
+        #high = numpy.full((num_laser_readings), self.max_laser_value)
+        #low = numpy.full((num_laser_readings), self.min_laser_value)
+        high = numpy.full((self.new_ranges), self.max_laser_value)
+        low = numpy.full((self.new_ranges), self.min_laser_value)        
+
 
         # We only use two integers
         self.observation_space = spaces.Box(low, high)
