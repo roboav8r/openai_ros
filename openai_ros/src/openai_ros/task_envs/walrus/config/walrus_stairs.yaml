@@ -1,0 +1,38 @@
+walrus: #namespace
+
+    n_actions: 3 # We have 3 actions, Accelerate forward, accelerate backward, hold
+    #n_observations: 6 # We have 6 different observations
+    speed_step: 1.0 # Time to wait in the reset phases
+
+    # Action parameters
+    linear_forward_speed_max: 1.2 # Maximum commanded linear speed
+    linear_forward_speed_min: -1.2 # Maximum commanded linear speed
+    #linear_turn_speed: 0.00 # Zero out angular speed for balancing task. We only care about linear velocity.
+    #angular_speed: 0.3 # Angular speed when turning Left or Right
+    init_linear_forward_speed: 0.0 # Initial linear speed in which we start each episode
+    init_linear_turn_speed: 0.0 # Initial angular speed in shich we start each episode
+    
+    # Observation parameters
+    num_scans: 2 # Number of LIDAR/laser rangefinders
+    new_ranges: 8 # How many laser readings we take from each LIDAR
+    min_range: 0.2 # Minimum meters below wich we consider we have crashed
+    max_laser_value: 6 # If laser scan is above this distance, round down to this distance
+    min_laser_value: 0 # Value considered there is an obstacle or crashed
+    num_imu_obs: 2 # For this task, we use y-orientation (pitch) and y-angular velocity (pitch rate)
+    max_pitch_orient: 0.5 # Maximum expected y-angle (pitch orientation)
+    min_pitch_orient: -0.5 # Minimum expected y-angle (pitch orientation)
+    max_pitch_rate: 1.0 # Maximum expected y-angular velocity (pitch) rate value
+    min_pitch_rate: -1.0 # Minimum expected y-angular velocity (pitch) rate value
+    max_x_disp: 25 # Maximum expected displacement in x-direction
+    min_x_disp: -1  # Minimum expected displacement in x-direction
+
+    # Reset parameters
+    max_linear_acceleration: 100 # Linear acceleration value in which we consider Walrus has crashed into something
+    max_angular_velocity: 1.0 # Angular velocity value in which we consider Walrus to have tipped over/unrecoverable
+    
+    # Reward parameters
+    stay_alive_reward: -2 # Points given each timestep for continuing
+    position_reward: 1 # Points added for every meter of error from x_position target
+    forward_velocity_reward: 10 # Reward for forward motion
+    ang_velocity_threshold: .25 # Angular velocity below which a reward is given
+    ang_velocity_reward: 0 # Points given when angular velocity is below threshold

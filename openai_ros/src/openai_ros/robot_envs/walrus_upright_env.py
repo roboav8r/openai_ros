@@ -13,13 +13,15 @@ from geometry_msgs.msg import Twist
 from openai_ros.openai_ros_common import ROSLauncher
 
 
-class WalrusEnv(robot_gazebo_env.RobotGazeboEnv):
+class WalrusUprightEnv(robot_gazebo_env.RobotGazeboEnv):
     """Superclass for all CubeSingleDisk environments.
     """
 
     def __init__(self, ros_ws_abspath):
         """
-        Initializes a new WalrusEnv environment.
+        Initializes a new WalrusUprightEnv environment.
+        Walrus doesnt use controller_manager, therefore we wont reset the TODO: check controllers
+        controllers in the standard fashion. For the moment we wont reset them.
 
         To check any topic we need to have the simulations running, we need to do two things:
         1) Unpause the simulation: without that th stream of data doesnt flow. This is for simulations
@@ -39,13 +41,13 @@ class WalrusEnv(robot_gazebo_env.RobotGazeboEnv):
 
         Args:
         """
-        rospy.logdebug("Start WalrusEnv INIT...")
+        rospy.logdebug("Start WalrusUprightEnv INIT...")
         # Variables that we give through the constructor.
         # None in this case
 
         # We launch the ROSlaunch that spawns the robot into the world
         ROSLauncher(rospackage_name="walrus_gazebo",
-                    launch_file_name="put_robot_in_world.launch",
+                    launch_file_name="put_robot_in_world_upright.launch",
                     ros_ws_abspath=ros_ws_abspath)
 
         # Internal Vars
@@ -56,10 +58,10 @@ class WalrusEnv(robot_gazebo_env.RobotGazeboEnv):
         self.robot_name_space = ""
 
         # We launch the init function of the Parent Class robot_gazebo_env.RobotGazeboEnv
-        super(WalrusEnv, self).__init__(controllers_list=self.controllers_list,
+        super(WalrusUprightEnv, self).__init__(controllers_list=self.controllers_list,
                                             robot_name_space=self.robot_name_space,
-                                            reset_controls=False,
-                                            start_init_physics_parameters=False)
+                                            reset_controls=True,
+                                            start_init_physics_parameters=True)
 
 
 
@@ -69,7 +71,7 @@ class WalrusEnv(robot_gazebo_env.RobotGazeboEnv):
         self._check_all_sensors_ready()
 
         # We Start all the ROS related Subscribers and publishers
-        rospy.Subscriber("/odom", Odometry, self._odom_callback)
+        rospy.Subscriber("/diff_vel_controller/odom", Odometry, self._odom_callback)
         rospy.Subscriber("/imu/data", Imu, self._imu_callback)
         rospy.Subscriber("/scan", LaserScan, self._laser_scan_l_callback)
         rospy.Subscriber("/scan_1", LaserScan, self._laser_scan_r_callback)
@@ -80,7 +82,15 @@ class WalrusEnv(robot_gazebo_env.RobotGazeboEnv):
 
         self.gazebo.pauseSim()
 
-        rospy.logdebug("Finished WalrusEnv INIT...")
+        # The odometry from diff_vel_controller doesn't reset after each run.
+        # Instead, track elapsed odometry before each run, so that it can be subtracted to give actual relative odometry.
+        #self.elapsed_x = 0.0
+        #self.elapsed_y = 0.0
+        #self.elapsed_z = 0.0
+        #self.odom = Odometry() # Blank odometry message
+
+
+        rospy.logdebug("Finished WalrusUprightEnv INIT...")
 
     # Methods needed by the RobotGazeboEnv
     # ----------------------------
@@ -108,15 +118,19 @@ class WalrusEnv(robot_gazebo_env.RobotGazeboEnv):
 
     def _check_odom_ready(self):
         self.odom = None
-        rospy.logdebug("Waiting for /odom to be READY...")
+        rospy.logdebug("Waiting for /diff_vel_controller/odom to be READY...")
         while self.odom is None and not rospy.is_shutdown():
             try:
-                self.odom = rospy.wait_for_message("/odom", Odometry, timeout=5.0)
-                rospy.logdebug("Current /odom READY=>")
+                self.odom = rospy.wait_for_message("/diff_vel_controller/odom", Odometry, timeout=5.0)
+                rospy.logdebug("Current /diff_vel_controller/odom READY=>")
 
             except:
-                rospy.logerr("Current /odom not ready yet, retrying for getting odom")
+                rospy.logerr("Current /diff_vel_controller/odom not ready yet, retrying for getting odom")
         
+        self.elapsed_x = self.odom.pose.pose.position.x
+        self.elapsed_y = self.odom.pose.pose.position.y
+        self.elapsed_z = self.odom.pose.pose.position.z
+
         return self.odom
 
 
@@ -202,6 +216,12 @@ class WalrusEnv(robot_gazebo_env.RobotGazeboEnv):
         of an episode.
         """
         raise NotImplementedError()
+        
+        # Since odometry drifts and cannot be reset between runs, save the elapsed pose for later processing.
+        self.elapsed_x = self.odom.pose.pose.position.x
+        self.elapsed_y = self.odom.pose.pose.position.y
+        self.elapsed_z = self.odom.pose.pose.position.z
+
 
     def _compute_reward(self, observations, done):
         """Calculates the reward to give based on the observations given.
@@ -297,7 +317,22 @@ class WalrusEnv(robot_gazebo_env.RobotGazeboEnv):
 
 
     def get_odom(self):
-        return self.odom
+
+        # Uncorrected, drifting odom:
+        odom_drift = self.odom
+
+        # Initialize relative odom as equal to drifting odom
+        rel_odom = odom_drift
+
+        # Now, subtract elapsed odometry and return corrected relative odometry
+        rel_odom.pose.pose.position.x -= self.elapsed_x
+        rel_odom.pose.pose.position.y -= self.elapsed_y
+        rel_odom.pose.pose.position.z -= self.elapsed_z
+
+        # Print an output for debugging
+        rospy.logdebug("Uncorrected odom position: " + str(self.odom.pose.pose.position))
+        rospy.logdebug("Corrected odom position: " + str(rel_odom.pose.pose.position))
+        return rel_odom
 
     def get_imu(self):
         return self.imu

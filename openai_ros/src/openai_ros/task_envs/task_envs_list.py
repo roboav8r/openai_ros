@@ -206,6 +206,50 @@ def RegisterOpenAI_Ros_Env(task_env, max_episode_steps=10000):
         # import our training environment
         from openai_ros.task_envs.walrus import walrus_test    
 
+    elif task_env == 'WalrusCampus-v0':
+
+        register(
+            id=task_env,
+            entry_point='openai_ros.task_envs.walrus.walrus_campus:WalrusCampusEnv',
+            max_episode_steps=max_episode_steps,
+        )
+
+        # import our training environment
+        from openai_ros.task_envs.walrus import walrus_campus
+
+    elif task_env == 'WalrusNav-v0':
+
+        register(
+            id=task_env,
+            entry_point='openai_ros.task_envs.walrus.walrus_nav:WalrusNavEnv',
+            max_episode_steps=max_episode_steps,
+        )
+
+        # import our training environment
+        from openai_ros.task_envs.walrus import walrus_nav
+
+    elif task_env == 'WalrusStairs-v0':
+
+        register(
+            id=task_env,
+            entry_point='openai_ros.task_envs.walrus.walrus_stairs:WalrusStairsEnv',
+            max_episode_steps=max_episode_steps,
+        )
+
+        # import our training environment
+        from openai_ros.task_envs.walrus import walrus_stairs
+
+    elif task_env == 'WalrusBalance-v0':
+
+        register(
+            id=task_env,
+            entry_point='openai_ros.task_envs.walrus.walrus_balance:WalrusBalanceEnv',
+            max_episode_steps=max_episode_steps,
+        )
+
+        # import our training environment
+        from openai_ros.task_envs.walrus import walrus_balance
+
 
         ############################################################ END WALRUS ADDITIONS
     elif task_env == 'WamvNavTwoSetsBuoys-v0':

@@ -1,0 +1,44 @@
+walrus: #namespace
+
+    speed_step: 1.0 # Time to wait in the reset phases
+
+    # Navigation goal parameters
+    x_goal: 9.5
+    y_goal: -9.5
+    success_radius: 0.5 #meters
+
+    # Action parameters
+    linear_speed_max: 1.0 # Maximum commanded linear speed
+    linear_speed_min: -0.5 # Maximum commanded linear speed
+    angular_speed_max: 0.5 # Maximum commanded linear speed
+    angular_speed_min: -0.5 # Maximum commanded linear speed
+    init_linear_forward_speed: 0.0 # Initial linear speed in which we start each episode
+    init_linear_turn_speed: 0.0 # Initial angular speed in shich we start each episode
+    
+    # Observation parameters
+    num_scans: 2 # Number of LIDAR/laser rangefinders
+    new_ranges: 8 # How many laser readings we take from each LIDAR
+    min_range: 0.2 # Minimum meters below which we consider we have crashed
+    max_laser_value: 6 # If laser scan is above this distance, round down to this distance
+    min_laser_value: 0 # Value considered there is an obstacle or crashed
+    num_imu_obs: 2 # For this task, we use y-orientation (pitch) and y-angular velocity (pitch rate)
+    max_yaw_orient: 1.0 # Maximum expected y-angle (pitch orientation)
+    min_yaw_orient: -1.0 # Minimum expected y-angle (pitch orientation)
+    #max_pitch_rate: 1.0 # Maximum expected y-angular velocity (pitch) rate value
+    #min_pitch_rate: -1.0 # Minimum expected y-angular velocity (pitch) rate value
+    max_x_disp: 25 # Maximum expected displacement in x-direction
+    min_x_disp: -25  # Minimum expected displacement in x-direction
+    max_y_disp: 25 # Maximum expected displacement in x-direction
+    min_y_disp: -25  # Minimum expected displacement in x-direction
+
+    # Reset parameters
+    max_linear_acceleration: 10 # Linear acceleration value in which we consider Walrus has crashed into something
+    max_angular_velocity: 1.0 # Angular velocity value in which we consider Walrus to have tipped over/unrecoverable
+    
+    # Reward parameters
+    stay_alive_reward: -1 # Points given each timestep for continuing
+    position_reward: 10 # Reward = position_reward/distance_to_goal in meters. If 1 meter away, reward is 10. If 10 meters away, reward is 1.
+    goal_reached_reward: 1000
+    forward_velocity_reward: 1 # Reward for forward motion
+    ang_velocity_threshold: .25 # Angular velocity below which a reward is given
+    ang_velocity_reward: 0 # Points given when angular velocity is below threshold

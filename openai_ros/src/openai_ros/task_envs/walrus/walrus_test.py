@@ -22,7 +22,7 @@ class WalrusTestEnv(walrus_env.WalrusEnv):
                                                " DOESNT exist, execute: mkdir -p " + ros_ws_abspath + \
                                                "/src;cd " + ros_ws_abspath + ";catkin_make"
 
-        ROSLauncher(rospackage_name="turtlebot3_gazebo",
+        ROSLauncher(rospackage_name="walrus_gazebo",
                     launch_file_name="start_world.launch",
                     ros_ws_abspath=ros_ws_abspath)
 
