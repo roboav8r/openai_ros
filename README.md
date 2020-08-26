@@ -27,6 +27,7 @@ The file is stored at robot_envs/walrus_upright_env.py
 
 Both Walrus environments depend on the walrus_description and walrus_gazebo packages (openai branch):
 https://github.com/UTNuclearRobotics/walrus_description/tree/openai
+
 https://github.com/UTNuclearRobotics/walrus_gazebo/tree/openai
 
 ## Task Environments
