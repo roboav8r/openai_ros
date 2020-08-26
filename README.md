@@ -19,14 +19,18 @@ Execute the following commands:<br>
 The utexas fork is meant to represent UT-specific robots and environments for training of ROS robots in Gazebo simulation. As of now, there are two new robot environments and three new task environments, described below.
 
 ## Robot environments
-### walrus: A robot environment for the Walrus robot. It launches a typical Walrus robot with two LIDAR scanning rangefinders, an IMU, and odometry. 
+- walrus: A robot environment for the Walrus robot. It launches a typical Walrus robot with two LIDAR scanning rangefinders, an IMU, and odometry. 
 The file is stored at robot_envs/walrus_env.py
 
-### walrus_upright: A robot environment for the Walrus robot, which spawns the robot in an upright position. This is used for the self-balancing task described below. The robot has the same sensor suite as in walrus_env, and the only difference is the spawn orientation as specified by the launch file.
+- walrus_upright: A robot environment for the Walrus robot, which spawns the robot in an upright position. This is used for the self-balancing task described below. The robot has the same sensor suite as in walrus_env, and the only difference is the spawn orientation as specified by the launch file.
 The file is stored at robot_envs/walrus_upright_env.py
 
 Both Walrus environments depend on the walrus_description package, openai branch here:
 https://github.com/UTNuclearRobotics/walrus_description/tree/openai
 
 ## Task Environments
-### WalrusBalance
+- WalrusBalance-v0
+- WalrusStairs-v0
+- WalrusNav-v0
+  - Stuff
+  - Stuff 2
