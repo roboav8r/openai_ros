@@ -33,6 +33,6 @@ https://github.com/UTNuclearRobotics/walrus_description/tree/openai
 - WalrusStairs-v0
 - WalrusNav-v0
   - Observations
-  - - 8 Scans
+    - 8 Scans
   - Actions
   - Rewards
