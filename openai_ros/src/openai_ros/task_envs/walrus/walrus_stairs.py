@@ -38,31 +38,13 @@ class WalrusStairsEnv(walrus_env.WalrusEnv):
         # We set the reward range, which is not compulsory but here we do it.
         self.reward_range = (-numpy.inf, numpy.inf)
 
-
-        #number_observations = rospy.get_param('/walrus/n_observations')
-        """
-        We set the Observation space for the 6 observations
-        cube_observations = [
-            round(current_disk_roll_vel, 0),
-            round(y_distance, 1),
-            round(roll, 1),
-            round(pitch, 1),
-            round(y_linear_speed,1),
-            round(yaw, 1),
-        ]
-        """
-
         # Action parameters
         self.linear_forward_speed_max = rospy.get_param('/walrus/linear_forward_speed_max')
         self.linear_forward_speed_min = rospy.get_param('/walrus/linear_forward_speed_min')
-        #self.linear_turn_speed = rospy.get_param('/walrus/linear_turn_speed')
-        #self.angular_speed = rospy.get_param('/walrus/angular_speed')
         self.init_linear_forward_speed = rospy.get_param('/walrus/init_linear_forward_speed')
         self.init_linear_turn_speed = rospy.get_param('/walrus/init_linear_turn_speed')
 
         # Set up action space. Potential action/commanded velocity is any value between linear_forward_speed_min and _max
-        #number_actions = rospy.get_param('/walrus/n_actions')
-        #self.action_space = spaces.Discrete(number_actions)
         self.action_space = spaces.Box(numpy.array([self.linear_forward_speed_min]), numpy.array([self.linear_forward_speed_max]))
 
         # Observation parameters
@@ -71,7 +53,6 @@ class WalrusStairsEnv(walrus_env.WalrusEnv):
         self.min_range = rospy.get_param('/walrus/min_range')
         self.max_laser_value = rospy.get_param('/walrus/max_laser_value')
         self.min_laser_value = rospy.get_param('/walrus/min_laser_value')
-        #self.num_imu_obs = rospy.get_param('/walrus/num_imu_obs')
         self.max_pitch_orient = rospy.get_param('/walrus/max_pitch_orient')
         self.min_pitch_orient = rospy.get_param('/walrus/min_pitch_orient')
         self.max_pitch_rate = rospy.get_param('/walrus/max_pitch_rate')
@@ -79,14 +60,12 @@ class WalrusStairsEnv(walrus_env.WalrusEnv):
         self.max_x_disp = rospy.get_param('/walrus/max_x_disp')
         self.min_x_disp = rospy.get_param('/walrus/min_x_disp')
         self.max_linear_acceleration = rospy.get_param('/walrus/max_linear_acceleration')
-        self.max_angular_velocity = rospy.get_param('/walrus/max_angular_velocity')
 
         # Set up observation space
         # We create two arrays based on the range values that will be assigned
         # In the discretization method.
         laser_scan_l = self.get_laser_scan_l()
         laser_scan_r = self.get_laser_scan_r()
-        #num_laser_readings = int(len(laser_scan.ranges)/self.new_ranges)
 
         # Define high and low values for the scans
         high_scan = numpy.full((self.new_ranges*self.num_scans), self.max_laser_value)

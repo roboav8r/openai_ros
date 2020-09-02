@@ -1,6 +1,6 @@
 walrus: #namespace
 
-    n_actions: 3 # We have 3 actions, Accelerate forward, accelerate backward, hold
+    #n_actions: 3 # We have 3 actions, Accelerate forward, accelerate backward, hold
     #n_observations: 6 # We have 6 different observations
     speed_step: 1.0 # Time to wait in the reset phases
 
@@ -21,18 +21,18 @@ walrus: #namespace
     num_imu_obs: 2 # For this task, we use y-orientation (pitch) and y-angular velocity (pitch rate)
     max_pitch_orient: 0.5 # Maximum expected y-angle (pitch orientation)
     min_pitch_orient: -0.5 # Minimum expected y-angle (pitch orientation)
-    max_pitch_rate: 1.0 # Maximum expected y-angular velocity (pitch) rate value
-    min_pitch_rate: -1.0 # Minimum expected y-angular velocity (pitch) rate value
+    max_pitch_rate: 2.5 # Maximum expected y-angular velocity (pitch) rate value
+    min_pitch_rate: -2.5 # Minimum expected y-angular velocity (pitch) rate value
     max_x_disp: 25 # Maximum expected displacement in x-direction
     min_x_disp: -1  # Minimum expected displacement in x-direction
 
     # Reset parameters
     max_linear_acceleration: 100 # Linear acceleration value in which we consider Walrus has crashed into something
-    max_angular_velocity: 1.0 # Angular velocity value in which we consider Walrus to have tipped over/unrecoverable
+    max_angular_velocity: 1.5 # Angular velocity value in which we consider Walrus to have tipped over/unrecoverable
     
     # Reward parameters
-    stay_alive_reward: -2 # Points given each timestep for continuing
-    position_reward: 1 # Points added for every meter of error from x_position target
-    forward_velocity_reward: 10 # Reward for forward motion
+    stay_alive_reward: -1 # Points given each timestep for continuing. Negative to penalize slow movement.
+    position_reward: 2 # Points added/subtracted for every meter of progress/ from x_position origin
+    forward_velocity_reward: 0 # Reward for forward motion
     ang_velocity_threshold: .25 # Angular velocity below which a reward is given
     ang_velocity_reward: 0 # Points given when angular velocity is below threshold
